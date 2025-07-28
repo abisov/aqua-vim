@@ -514,6 +514,34 @@ return {
           lualine_x = {
             { "fileformat", "filetype" },
             {
+              function()
+                local ok, gather = pcall(vim.fn['floaterm#buflist#gather'])
+                if not ok then return '' end
+                
+                local buffers = gather
+                local count = #buffers
+                if count == 0 then return '' end
+                
+                local current_ok, current = pcall(vim.fn['floaterm#buflist#curr'])
+                if not current_ok then return '' end
+                
+                local index = 0
+                for i, bufnr in ipairs(buffers) do
+                  if bufnr == current then
+                    index = i
+                    break
+                  end
+                end
+                
+                return string.format('󰆍 %d/%d', index, count)
+              end,
+              cond = function()
+                local ok, gather = pcall(vim.fn['floaterm#buflist#gather'])
+                return ok and gather and #gather > 0
+              end,
+              color = { fg = "#7aa2f7" },
+            },
+            {
               require("noice").api.statusline.mode.get,
               cond = require("noice").api.statusline.mode.has,
               color = { fg = "#ff9e64" },
@@ -554,6 +582,18 @@ return {
       )
       vim.keymap.set("n", "<leader>flt", "<cmd>:FloatermToggle<CR>", { desc = "Toggle FloatTerm" })
       vim.keymap.set("t", "<leader>flt", "<cmd>:FloatermToggle<CR>", { desc = "Toggle FloatTerm" })
+      vim.keymap.set("n", "<leader>ftr", "<cmd>:FloatermNew --height=1.0 --width=0.3 --wintype=vsplit --position=right --name=right_term<CR>", { desc = "Open terminal on right" })
+      
+      -- Multiple terminal management
+      vim.keymap.set("n", "<leader>tn", "<cmd>:FloatermNew --height=1.0 --width=0.3 --wintype=vsplit --position=right<CR>", { desc = "New terminal" })
+      vim.keymap.set("n", "<leader>tk", "<cmd>:FloatermKill<CR>", { desc = "Kill current terminal" })
+      vim.keymap.set("n", "<leader>t[", "<cmd>:FloatermPrev<CR>", { desc = "Previous terminal" })
+      vim.keymap.set("n", "<leader>t]", "<cmd>:FloatermNext<CR>", { desc = "Next terminal" })
+      vim.keymap.set("n", "<leader>tt", "<cmd>:FloatermToggle<CR>", { desc = "Toggle terminal" })
+      
+      -- Terminal mode mappings for switching
+      vim.keymap.set("t", "<leader>t[", "<cmd>:FloatermPrev<CR>", { desc = "Previous terminal" }) 
+      vim.keymap.set("t", "<leader>t]", "<cmd>:FloatermNext<CR>", { desc = "Next terminal" })
     end,
   },
   {

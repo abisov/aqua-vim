@@ -60,16 +60,16 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc =
 -- Jump to plugin management file
 vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.config/nvim/lua/plugins.lua<CR>", { desc = "Jump to configuration file" })
 
--- Run Tests
-vim.keymap.set("n", "<leader>t", "<cmd>lua require('neotest').run.run()<CR>", { desc = "Run Test" })
-vim.keymap.set("n", "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>",
+-- Run Tests (using <leader>" as entry point)
+vim.keymap.set("n", '<leader>"', "<cmd>lua require('neotest').run.run()<CR>", { desc = "Run Test" })
+vim.keymap.set("n", '<leader>"f', "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>",
   { desc = "Run Test File" })
-vim.keymap.set("n", "<leader>td", "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<CR>",
-  { desc = "Run Current Test Directory" })
-vim.keymap.set("n", "<leader>tp", "<cmd>lua require('neotest').output_panel.toggle()<CR>",
+vim.keymap.set("n", '<leader>"d', "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<CR>",
+  { desc = "Run Test Directory" })
+vim.keymap.set("n", '<leader>"p', "<cmd>lua require('neotest').output_panel.toggle()<CR>",
   { desc = "Toggle Test Output Panel" })
-vim.keymap.set("n", "<leader>tl", "<cmd>lua require('neotest').run.run_last()<CR>", { desc = "Run Last Test" })
-vim.keymap.set("n", "<leader>ts", "<cmd>lua require('neotest').summary.toggle()<CR>", { desc = "Toggle Test Summary" })
+vim.keymap.set("n", '<leader>"l', "<cmd>lua require('neotest').run.run_last()<CR>", { desc = "Run Last Test" })
+vim.keymap.set("n", '<leader>"s', "<cmd>lua require('neotest').summary.toggle()<CR>", { desc = "Toggle Test Summary" })
 
 -- Debug Tests
 vim.keymap.set("n", "<leader>dt", "<cmd>DapContinue<CR>", { desc = "Start Debugging" })
@@ -116,6 +116,23 @@ vim.keymap.set("n", "<C-S-Down>", ":resize +2<CR>", { desc = "Resize Horizontal 
 vim.keymap.set("n", "<C-S-Up>", ":resize -2<CR>", { desc = "Resize Horizontal Split Up" })
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Resize Vertical Split Down" })
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Resize Vertical Split Up" })
+
+-- Window/Split management (using <leader>w prefix to avoid conflicts)
+vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<CR>", { desc = "Split Vertically" })
+vim.keymap.set("n", "<leader>wh", "<cmd>split<CR>", { desc = "Split Horizontally" })
+vim.keymap.set("n", "<leader>wt", "<cmd>tab split<CR>", { desc = "Send Buffer to New Tab" })
+vim.keymap.set("n", "<leader>wT", "<C-w>T", { desc = "Move Split to New Tab" })
+
+-- Tab management (using different prefix to avoid all conflicts)
+vim.keymap.set("n", "<leader>Tn", "<cmd>tabnew<CR>", { desc = "New Tab" })
+vim.keymap.set("n", "<leader>Tc", "<cmd>tabclose<CR>", { desc = "Close Tab" })
+vim.keymap.set("n", "<leader>To", "<cmd>tabonly<CR>", { desc = "Close Other Tabs" })
+vim.keymap.set("n", "gt", "<cmd>tabnext<CR>", { desc = "Next Tab" })
+vim.keymap.set("n", "gT", "<cmd>tabprev<CR>", { desc = "Previous Tab" })
+
+-- Move tabs  
+vim.keymap.set("n", "<leader>Tm", "<cmd>tabmove<CR>", { desc = "Move Tab to End" })
+vim.keymap.set("n", "<leader>TM", "<cmd>tabmove 0<CR>", { desc = "Move Tab to Beginning" })
 
 -- Obsidian
 vim.keymap.set("n", "<leader>oc", "<cmd>lua require('obsidian').util.toggle_checkbox()<CR>",
