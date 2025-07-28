@@ -24,6 +24,15 @@ return {
     { "saadparwaiz1/cmp_luasnip" },
   },
   config = function()
+    -- Configure diagnostics display
+    vim.diagnostic.config({
+      virtual_text = true,
+      signs = true,
+      underline = true,
+      update_in_insert = false,
+      severity_sort = true,
+    })
+
     local lsp = require("lsp-zero")
 
     lsp.on_attach(function(client, bufnr)
