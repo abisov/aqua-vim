@@ -59,7 +59,6 @@ return {
         "dockerls",
         "bashls",
         "marksman",
-        "solargraph",
         "cucumber_language_server",
         "gopls",
         "astro",

@@ -20,9 +20,9 @@ require("lazy").setup("plugins", {
   },
 })
 
-require('exosyphon.globals')
-require('exosyphon.remaps')
-require('exosyphon.options')
+require('aqua.globals')
+require('aqua.remaps')
+require('aqua.options')
 vim.cmd("colorscheme tokyonight")
 vim.cmd('hi IlluminatedWordText guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordRead guibg=none gui=underline')
