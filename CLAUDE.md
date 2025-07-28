@@ -61,8 +61,31 @@ Uses lazy.nvim with lazy loading strategies:
 
 **Git Integration**:
 - `<leader>gs` - Open Fugitive
-- Gitsigns for hunk navigation (`]c`, `[c`) and staging (`<leader>hs`)
+- `<leader>lg` - Open LazyGit
+- Gitsigns for comprehensive git hunk management (see Git Operations section)
+- Diffview for advanced diff visualization and merge conflict resolution
 - Octo.nvim for GitHub integration (`:Octo`)
+
+## Git Operations
+
+**Gitsigns (lua/plugins/gitsigns.lua)**:
+- Hunk navigation: `]c` (next), `[c` (previous)
+- Hunk actions: `<leader>ghs` (stage), `<leader>ghr` (reset), `<leader>ghp` (preview)
+- Buffer actions: `<leader>ghS` (stage all), `<leader>ghR` (reset all), `<leader>ghu` (undo stage)
+- Blame: `<leader>ghb` (full), `<leader>ghB` (summary), `<leader>gtb` (toggle line blame)
+- Diff: `<leader>ghd` (diff this), `<leader>ghD` (diff cached), `<leader>gq` (exit diff cleanly)
+- Toggles: `<leader>gts` (signs), `<leader>gtn` (number highlight), `<leader>gtl` (line highlight), `<leader>gtw` (word diff), `<leader>gtd` (deleted lines)
+- Text object: `ih` (select hunk)
+
+**Diffview (lua/plugins/diffview.lua)**:
+- `<leader>gdo` - Open Diffview (compare working tree with index)
+- `<leader>gdc` - Close Diffview
+- `<leader>gdh` - Open file history view
+- `<leader>gdr` - Refresh Diffview
+- `<leader>gdt` - Toggle file panel
+- File panel navigation: `j/k` (move), `<CR>/o` (open diff), `-` (stage/unstage)
+- Merge conflict resolution: `<leader>co` (ours), `<leader>ct` (theirs), `<leader>cb` (base), `<leader>ca` (all), `dx` (delete)
+- Layout cycling: `g<C-x>` (cycle through diff layouts)
 
 ## Language-Specific Features
 
@@ -92,3 +115,7 @@ Uses lazy.nvim with lazy loading strategies:
 **Terminal**: FloatTerm for floating terminals (`<leader>ft`)
 
 **Productivity**: Harpoon for quick file switching, marks.nvim for bookmarks, Flash for quick navigation
+
+## Documentation
+
+- `docs/git-workflow.md` - Comprehensive guide for using gitsigns and diffview features

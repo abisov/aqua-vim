@@ -599,22 +599,22 @@ return {
       local wk = require("which-key")
       wk.setup({})
       
-      -- Register group descriptions
-      wk.register({
-        ["<leader>f"] = { name = "Find (Telescope)" },
-        ["<leader>t"] = { name = "Terminals" },
-        ["<leader>T"] = { name = "Tabs" },
-        ["<leader>w"] = { name = "Windows/Splits" },
-        ["<leader>\""] = { name = "Tests" },
-        ["<leader>d"] = { name = "Debug" },
-        ["<leader>db"] = { name = "Breakpoints" },
-        ["<leader>o"] = { name = "Obsidian" },
-        ["<leader>c"] = { name = "Copy" },
-        ["<leader>v"] = { name = "Vim Config" },
-        ["<leader>g"] = { name = "Git" },
-        ["<leader>R"] = { name = "Refactor" },
-        ["<leader>n"] = { name = "Noice/Notes" },
-        ["<leader>e"] = { name = "Explore (Yazi)" },
+      -- Register group descriptions using new spec format
+      wk.add({
+        { "<leader>f", group = "Find (Telescope)" },
+        { "<leader>t", group = "Terminals" },
+        { "<leader>T", group = "Tabs" },
+        { "<leader>w", group = "Windows/Splits" },
+        { '<leader>"', group = "Tests" },
+        { "<leader>d", group = "Debug" },
+        { "<leader>db", group = "Breakpoints" },
+        { "<leader>o", group = "Obsidian" },
+        { "<leader>c", group = "Copy" },
+        { "<leader>v", group = "Vim Config" },
+        { "<leader>g", group = "Git" },
+        { "<leader>R", group = "Refactor" },
+        { "<leader>n", group = "Noice/Notes" },
+        { "<leader>e", group = "Explore (Yazi)" },
       })
     end,
   },
@@ -642,6 +642,16 @@ return {
       -- Terminal mode mappings for switching
       vim.keymap.set("t", "<leader>t[", "<cmd>:FloatermPrev<CR>", { desc = "Previous terminal" }) 
       vim.keymap.set("t", "<leader>t]", "<cmd>:FloatermNext<CR>", { desc = "Next terminal" })
+      
+      -- Terminal window resizing
+      vim.keymap.set("n", "<leader>th", function()
+        local count = vim.v.count1 * 5
+        vim.cmd("vertical resize -" .. count)
+      end, { desc = "Decrease terminal width" })
+      vim.keymap.set("n", "<leader>tl", function()
+        local count = vim.v.count1 * 5
+        vim.cmd("vertical resize +" .. count)
+      end, { desc = "Increase terminal width" })
     end,
   },
   {
@@ -649,70 +659,6 @@ return {
     event = "VeryLazy",
     config = function()
       require("unimpaired").setup()
-    end,
-  },
-  {
-    "lewis6991/gitsigns.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("gitsigns").setup({
-        on_attach = function(bufnr)
-          local gs = package.loaded.gitsigns
-
-          local function map(mode, l, r, opts)
-            opts = opts or {}
-            opts.buffer = bufnr
-            vim.keymap.set(mode, l, r, opts)
-          end
-
-          -- Navigation
-          map("n", "]c", function()
-            if vim.wo.diff then
-              return "]c"
-            end
-            vim.schedule(function()
-              gs.next_hunk()
-            end)
-            return "<Ignore>"
-          end, { expr = true })
-
-          map("n", "[c", function()
-            if vim.wo.diff then
-              return "[c"
-            end
-            vim.schedule(function()
-              gs.prev_hunk()
-            end)
-            return "<Ignore>"
-          end, { expr = true })
-
-          -- Actions
-          map("n", "<leader>hs", gs.stage_hunk, { desc = "GitSigns state hunk" })
-          map("n", "<leader>hr", gs.reset_hunk, { desc = "GitSigns reset hunk" })
-          map("v", "<leader>hs", function()
-            gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-          end, { desc = "GitSigns stage_hunk" })
-          map("v", "<leader>hr", function()
-            gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-          end, { desc = "GitSigns reset_hunk" })
-          map("n", "<leader>hS", gs.stage_buffer, { desc = "GitSigns stage_buffer" })
-          map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "GitSigns undo_stage_hunk" })
-          map("n", "<leader>hR", gs.reset_buffer, { desc = "GitSigns reset_buffer" })
-          map("n", "<leader>hp", gs.preview_hunk, { desc = "GitSigns preview_hunk" })
-          map("n", "<leader>hb", function()
-            gs.blame_line({ full = true })
-          end, { desc = "GitSigns blame line" })
-          map("n", "<leader>htb", gs.toggle_current_line_blame, { desc = "GitSigns toggle blame" })
-          map("n", "<leader>hd", gs.diffthis, { desc = "GitSigns diffthis" })
-          map("n", "<leader>hD", function()
-            gs.diffthis("~")
-          end, { desc = "GitSigns diffthis" })
-          map("n", "<leader>htd", gs.toggle_deleted, { desc = "GitSigns toggle_deleted" })
-
-          -- Text object
-          map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "GitSigns select hunk" })
-        end,
-      })
     end,
   },
   { "mg979/vim-visual-multi", event = "VeryLazy" },
@@ -817,6 +763,23 @@ return {
       vim.keymap.set({ "n", "v" }, "<leader>co", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
       vim.keymap.set({ "n", "v" }, "<leader>ct", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
       vim.keymap.set({ "v" }, "<leader>ca", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
+    end,
+  },
+  {
+    "kdheepak/lazygit.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
+    config = function()
+      vim.g.lazygit_floating_window_winblend = 0
+      vim.g.lazygit_floating_window_scaling_factor = 0.9
+      vim.g.lazygit_floating_window_corner_chars = {'╭', '╮', '╰', '╯'}
+      vim.g.lazygit_floating_window_use_plenary = 0
+      vim.g.lazygit_use_neovim_remote = 1
     end,
   }
 }
