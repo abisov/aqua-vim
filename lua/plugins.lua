@@ -568,6 +568,28 @@ return {
     build = ":call fzf#install()",
   },
   { "nanotee/zoxide.vim", event = "VeryLazy" },
+  {
+    "mikavilpas/yazi.nvim",
+    event = "VeryLazy",
+    keys = {
+      {
+        "<leader>e",
+        "<cmd>Yazi<cr>",
+        desc = "Open Yazi",
+      },
+      {
+        "<leader>ew",
+        "<cmd>Yazi cwd<cr>",
+        desc = "Open Yazi in working directory",
+      },
+    },
+    opts = {
+      open_for_directories = false,
+      keymaps = {
+        show_help = '<f1>',
+      },
+    },
+  },
   { "nvim-telescope/telescope-ui-select.nvim", event = "VeryLazy" },
   { "debugloop/telescope-undo.nvim", event = "VeryLazy" },
   {
@@ -585,12 +607,14 @@ return {
         ["<leader>w"] = { name = "Windows/Splits" },
         ["<leader>\""] = { name = "Tests" },
         ["<leader>d"] = { name = "Debug" },
+        ["<leader>db"] = { name = "Breakpoints" },
         ["<leader>o"] = { name = "Obsidian" },
         ["<leader>c"] = { name = "Copy" },
         ["<leader>v"] = { name = "Vim Config" },
         ["<leader>g"] = { name = "Git" },
         ["<leader>R"] = { name = "Refactor" },
         ["<leader>n"] = { name = "Noice/Notes" },
+        ["<leader>e"] = { name = "Explore (Yazi)" },
       })
     end,
   },
