@@ -571,6 +571,30 @@ return {
   { "nvim-telescope/telescope-ui-select.nvim", event = "VeryLazy" },
   { "debugloop/telescope-undo.nvim", event = "VeryLazy" },
   {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      local wk = require("which-key")
+      wk.setup({})
+      
+      -- Register group descriptions
+      wk.register({
+        ["<leader>f"] = { name = "Find (Telescope)" },
+        ["<leader>t"] = { name = "Terminals" },
+        ["<leader>T"] = { name = "Tabs" },
+        ["<leader>w"] = { name = "Windows/Splits" },
+        ["<leader>\""] = { name = "Tests" },
+        ["<leader>d"] = { name = "Debug" },
+        ["<leader>o"] = { name = "Obsidian" },
+        ["<leader>c"] = { name = "Copy" },
+        ["<leader>v"] = { name = "Vim Config" },
+        ["<leader>g"] = { name = "Git" },
+        ["<leader>R"] = { name = "Refactor" },
+        ["<leader>n"] = { name = "Noice/Notes" },
+      })
+    end,
+  },
+  {
     "voldikss/vim-floaterm",
     event = "VeryLazy",
     config = function()
