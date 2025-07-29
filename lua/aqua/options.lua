@@ -35,13 +35,21 @@ vim.opt.conceallevel = 2
 
 vim.opt.termguicolors = true
 
--- Auto change directory to file's directory
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   pattern = "*",
-  callback = function()
-    local bufname = vim.api.nvim_buf_get_name(0)
-    if bufname ~= "" and vim.fn.isdirectory(vim.fn.expand("%:p:h")) == 1 then
-      vim.cmd("cd " .. vim.fn.expand("%:p:h"))
-    end
-  end,
+  command = "silent! checktime"
 })
+-- Auto change directory to file's directory (disabled - causes issues with root-relative commands)
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   pattern = "*",
+--   callback = function()
+--     local bufname = vim.api.nvim_buf_get_name(0)
+--     if bufname ~= "" and vim.fn.isdirectory(vim.fn.expand("%:p:h")) == 1 then
+--       vim.cmd("cd " .. vim.fn.expand("%:p:h"))
+--     end
+--   end,
+-- })
+-- Enable .nvimrc for local dir configuration
+vim.opt.exrc = true
+vim.opt.secure = true

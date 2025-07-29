@@ -51,6 +51,23 @@ return {
   },
   { "mfussenegger/nvim-jdtls", ft = {"kotlin", "java"} },
   {
+    "keith/swift.vim",
+    ft = "swift",
+  },
+  -- Enhanced Swift support
+  {
+    "wojciech-kulik/xcodebuild.nvim",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require("xcodebuild").setup({
+        xcode_developer_path = "/Applications/Xcode-beta.app/Contents/Developer",
+      })
+    end,
+  },
+  {
     "stevearc/oil.nvim",
     event = "VeryLazy",
     opts = {},

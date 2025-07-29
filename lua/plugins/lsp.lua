@@ -81,6 +81,13 @@ return {
       },
     })
 
+    -- Setup sourcekit-lsp manually (not through Mason)
+    require("lspconfig").sourcekit.setup({
+      cmd = { "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp" },
+      filetypes = { "swift", "objective-c", "objective-cpp" },
+      root_dir = require("lspconfig.util").root_pattern("Package.swift", ".git"),
+    })
+
     local cmp_action = require("lsp-zero").cmp_action()
     local cmp = require("cmp")
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
