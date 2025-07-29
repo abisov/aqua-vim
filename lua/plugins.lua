@@ -2,9 +2,165 @@ return {
   {
     'MeanderingProgrammer/render-markdown.nvim',
     event = "VeryLazy",
-    opts = {},
     ft = { "markdown", "codecompanion" },
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' },
+    config = function()
+      local render_markdown = require('render-markdown')
+      render_markdown.setup({
+        enabled = true,
+        max_file_size = 5.0,
+        debounce = 100,
+        render_modes = { 'n', 'c' },
+        anti_conceal = {
+          enabled = true,
+          above = 0,
+          below = 0,
+        },
+        heading = {
+          enabled = true,
+          sign = true,
+          position = 'overlay',
+          icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
+          signs = { '󰫎 ' },
+          width = 'full',
+          left_pad = 0,
+          right_pad = 0,
+          min_width = 0,
+          border = false,
+          above = '▄',
+          below = '▀',
+        },
+        paragraph = {
+          enabled = true,
+          left_margin = 0,
+          min_width = 0,
+        },
+        code = {
+          enabled = true,
+          sign = true,
+          style = 'full',
+          position = 'left',
+          language_pad = 0,
+          disable_background = { 'diff' },
+          width = 'full',
+          left_pad = 0,
+          right_pad = 0,
+          min_width = 0,
+          border = 'thin',
+          above = '▄',
+          below = '▀',
+          highlight = 'RenderMarkdownCode',
+          highlight_inline = 'RenderMarkdownCodeInline',
+        },
+        dash = {
+          enabled = true,
+          icon = '─',
+          width = 'full',
+          highlight = 'RenderMarkdownDash',
+        },
+        bullet = {
+          enabled = true,
+          icons = { '●', '○', '◆', '◇' },
+          left_pad = 0,
+          right_pad = 0,
+          highlight = 'RenderMarkdownBullet',
+        },
+        checkbox = {
+          enabled = true,
+          position = 'inline',
+          unchecked = {
+            icon = '󰄱 ',
+            highlight = 'RenderMarkdownUnchecked',
+          },
+          checked = {
+            icon = '󰱒 ',
+            highlight = 'RenderMarkdownChecked',
+          },
+          custom = {
+            todo = { raw = '[-]', rendered = '󰥔 ', highlight = 'RenderMarkdownTodo' },
+          },
+        },
+        quote = {
+          enabled = true,
+          icon = '▋',
+          repeat_linebreak = false,
+          highlight = 'RenderMarkdownQuote',
+        },
+        pipe_table = {
+          enabled = true,
+          preset = 'none',
+          style = 'full',
+          cell = 'padded',
+          min_width = 0,
+          border = {
+            '┌', '┬', '┐',
+            '├', '┼', '┤',
+            '└', '┴', '┘',
+            '│', '─',
+          },
+          alignment_indicator = '━',
+          head = 'RenderMarkdownTableHead',
+          row = 'RenderMarkdownTableRow',
+          filler = 'RenderMarkdownTableFill',
+        },
+        callout = {
+          note = { raw = '[!NOTE]', rendered = '󰋽 Note', highlight = 'RenderMarkdownInfo' },
+          tip = { raw = '[!TIP]', rendered = '󰌶 Tip', highlight = 'RenderMarkdownSuccess' },
+          important = { raw = '[!IMPORTANT]', rendered = '󰅾 Important', highlight = 'RenderMarkdownHint' },
+          warning = { raw = '[!WARNING]', rendered = '󰀪 Warning', highlight = 'RenderMarkdownWarn' },
+          caution = { raw = '[!CAUTION]', rendered = '󰳦 Caution', highlight = 'RenderMarkdownError' },
+          abstract = { raw = '[!ABSTRACT]', rendered = '󰨸 Abstract', highlight = 'RenderMarkdownInfo' },
+          summary = { raw = '[!SUMMARY]', rendered = '󰨸 Summary', highlight = 'RenderMarkdownInfo' },
+          tldr = { raw = '[!TLDR]', rendered = '󰨸 Tldr', highlight = 'RenderMarkdownInfo' },
+          info = { raw = '[!INFO]', rendered = '󰋽 Info', highlight = 'RenderMarkdownInfo' },
+          todo = { raw = '[!TODO]', rendered = '󰗡 Todo', highlight = 'RenderMarkdownInfo' },
+          hint = { raw = '[!HINT]', rendered = '󰌶 Hint', highlight = 'RenderMarkdownSuccess' },
+          success = { raw = '[!SUCCESS]', rendered = '󰄬 Success', highlight = 'RenderMarkdownSuccess' },
+          check = { raw = '[!CHECK]', rendered = '󰄬 Check', highlight = 'RenderMarkdownSuccess' },
+          done = { raw = '[!DONE]', rendered = '󰄬 Done', highlight = 'RenderMarkdownSuccess' },
+          question = { raw = '[!QUESTION]', rendered = '󰘥 Question', highlight = 'RenderMarkdownWarn' },
+          help = { raw = '[!HELP]', rendered = '󰘥 Help', highlight = 'RenderMarkdownWarn' },
+          faq = { raw = '[!FAQ]', rendered = '󰘥 Faq', highlight = 'RenderMarkdownWarn' },
+          attention = { raw = '[!ATTENTION]', rendered = '󰀪 Attention', highlight = 'RenderMarkdownWarn' },
+          failure = { raw = '[!FAILURE]', rendered = '󰅖 Failure', highlight = 'RenderMarkdownError' },
+          fail = { raw = '[!FAIL]', rendered = '󰅖 Fail', highlight = 'RenderMarkdownError' },
+          missing = { raw = '[!MISSING]', rendered = '󰅖 Missing', highlight = 'RenderMarkdownError' },
+          danger = { raw = '[!DANGER]', rendered = '󱐌 Danger', highlight = 'RenderMarkdownError' },
+          error = { raw = '[!ERROR]', rendered = '󰅖 Error', highlight = 'RenderMarkdownError' },
+          bug = { raw = '[!BUG]', rendered = '󰨰 Bug', highlight = 'RenderMarkdownError' },
+          example = { raw = '[!EXAMPLE]', rendered = '󰉹 Example', highlight = 'RenderMarkdownHint' },
+          quote = { raw = '[!QUOTE]', rendered = '󱆨 Quote', highlight = 'RenderMarkdownQuote' },
+          cite = { raw = '[!CITE]', rendered = '󱆨 Cite', highlight = 'RenderMarkdownQuote' },
+        },
+        link = {
+          enabled = true,
+          image = '󰥶 ',
+          email = '󰀓 ',
+          hyperlink = '󰖟 ',
+          highlight = 'RenderMarkdownLink',
+          custom = {
+            web = { pattern = '^http[s]?://', icon = '󰖟 ', highlight = 'RenderMarkdownLink' },
+          },
+        },
+        sign = {
+          enabled = true,
+          highlight = 'RenderMarkdownSign',
+        },
+      })
+      
+      -- Add keymaps for controlling render-markdown
+      vim.keymap.set("n", "<leader>mr", function()
+        render_markdown.toggle()
+      end, { desc = "Toggle Markdown Rendering" })
+      
+      vim.keymap.set("n", "<leader>me", function()
+        render_markdown.enable()
+      end, { desc = "Enable Markdown Rendering" })
+      
+      vim.keymap.set("n", "<leader>md", function()
+        render_markdown.disable()
+      end, { desc = "Disable Markdown Rendering" })
+    end,
   },
   { 'folke/neodev.nvim', event = "VeryLazy", opts = {} },
   {
@@ -119,15 +275,6 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
-  },
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    build = "cd app && yarn install",
-    init = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-    end,
-    ft = { "markdown" },
   },
   {
     "mfussenegger/nvim-lint",
@@ -625,7 +772,7 @@ return {
         { '<leader>"', group = "Tests" },
         { "<leader>d", group = "Debug" },
         { "<leader>db", group = "Breakpoints" },
-        { "<leader>o", group = "Obsidian" },
+        { "<leader>m", group = "Markdown" },
         { "<leader>c", group = "Copy" },
         { "<leader>v", group = "Vim Config" },
         { "<leader>g", group = "Git" },
