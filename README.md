@@ -114,7 +114,58 @@ Install these system-wide or they'll be auto-installed by Mason where possible:
 
 ## Installation
 
-### 1. System Dependencies
+### 🚀 Quick Start with Nix (Recommended)
+
+The easiest way to get up and running with all dependencies:
+
+#### Prerequisites
+- [Nix package manager](https://nixos.org/download.html) with flakes enabled
+- Optional: [direnv](https://direnv.net/) for automatic environment loading
+
+#### Using Nix Flakes (Recommended)
+```bash
+# Clone the configuration
+git clone https://github.com/abisov/aqua-vim.git ~/.config/nvim
+
+# Enter the development environment
+cd ~/.config/nvim
+nix develop
+
+# Or run directly from anywhere
+nix develop github:abisov/aqua-vim
+```
+
+#### With direnv (Auto-loading)
+```bash
+# Install direnv first
+nix profile install nixpkgs#direnv
+
+# Clone and enter directory
+git clone https://github.com/abisov/aqua-vim.git ~/.config/nvim
+cd ~/.config/nvim
+
+# Allow direnv to load the environment
+direnv allow
+
+# Environment loads automatically when you cd into the directory
+```
+
+#### Available Nix Shells
+- `nix develop` - Full development environment with all tools
+- `nix develop .#minimal` - Minimal setup with just Neovim and core tools
+
+**Benefits of the Nix approach:**
+- ✅ Reproducible across different machines and OS
+- ✅ No conflicts with system packages
+- ✅ All dependencies pinned to specific versions
+- ✅ Works on Linux, macOS, and Windows (WSL)
+- ✅ Automatic cleanup when exiting shell
+
+---
+
+### 1. Manual Installation (Alternative)
+
+If you prefer manual installation or don't want to use Nix:
 
 #### macOS (using Homebrew)
 ```bash
