@@ -94,6 +94,8 @@ return {
 
     require("luasnip.loaders.from_vscode").lazy_load()
 
+    vim.diagnostic.config({ virtual_text = false }) 
+
     -- `/` cmdline setup.
     cmp.setup.cmdline("/", {
       mapping = cmp.mapping.preset.cmdline(),
