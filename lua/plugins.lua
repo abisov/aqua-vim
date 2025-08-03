@@ -780,39 +780,98 @@ return {
     end,
   },
   {
-    "voldikss/vim-floaterm",
+    "akinsho/toggleterm.nvim",
+    version = "*",
     event = "VeryLazy",
     config = function()
-      vim.keymap.set(
-        "n",
-        "<leader>ft",
-        "<cmd>:FloatermNew --height=0.7 --width=0.8 --wintype=float --name=floaterm1 --position=center --autoclose=2<CR>",
-        { desc = "Open FloatTerm" }
-      )
-      vim.keymap.set("n", "<leader>flt", "<cmd>:FloatermToggle<CR>", { desc = "Toggle FloatTerm" })
-      vim.keymap.set("t", "<leader>flt", "<cmd>:FloatermToggle<CR>", { desc = "Toggle FloatTerm" })
-      vim.keymap.set("n", "<leader>ftr", "<cmd>:FloatermNew --height=1.0 --width=0.3 --wintype=vsplit --position=right --name=right_term<CR>", { desc = "Open terminal on right" })
-      
-      -- Multiple terminal management
-      vim.keymap.set("n", "<leader>tn", "<cmd>:FloatermNew --height=1.0 --width=0.3 --wintype=vsplit --position=right<CR>", { desc = "New terminal" })
-      vim.keymap.set("n", "<leader>tk", "<cmd>:FloatermKill<CR>", { desc = "Kill current terminal" })
-      vim.keymap.set("n", "<leader>t[", "<cmd>:FloatermPrev<CR>", { desc = "Previous terminal" })
-      vim.keymap.set("n", "<leader>t]", "<cmd>:FloatermNext<CR>", { desc = "Next terminal" })
-      vim.keymap.set("n", "<leader>tt", "<cmd>:FloatermToggle<CR>", { desc = "Toggle terminal" })
-      
-      -- Terminal mode mappings for switching
-      vim.keymap.set("t", "<leader>t[", "<cmd>:FloatermPrev<CR>", { desc = "Previous terminal" }) 
-      vim.keymap.set("t", "<leader>t]", "<cmd>:FloatermNext<CR>", { desc = "Next terminal" })
-      
-      -- Terminal window resizing
-      vim.keymap.set("n", "<leader>th", function()
-        local count = vim.v.count1 * 5
-        vim.cmd("vertical resize -" .. count)
-      end, { desc = "Decrease terminal width" })
-      vim.keymap.set("n", "<leader>tl", function()
-        local count = vim.v.count1 * 5
-        vim.cmd("vertical resize +" .. count)
-      end, { desc = "Increase terminal width" })
+      require("toggleterm").setup({
+        size = function(term)
+          if term.direction == "horizontal" then
+            return 15
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.3
+          end
+        end,
+        open_mapping = [[<c-\>]],
+        hide_numbers = true,
+        shade_terminals = true,
+        start_in_insert = true,
+        insert_mappings = true,
+        terminal_mappings = true,
+        persist_size = true,
+        direction = 'horizontal',
+        close_on_exit = true,
+        shell = vim.o.shell,
+        float_opts = {
+          border = 'curved',
+          winblend = 0,
+          highlights = {
+            border = "Normal",
+            background = "Normal",
+          }
+        }
+      })
+
+      -- Tab-like terminal management (numbered terminals 1-4)
+      vim.keymap.set("n", "<leader>t1", "<cmd>1ToggleTerm<cr>", { desc = "Terminal 1" })
+      vim.keymap.set("n", "<leader>t2", "<cmd>2ToggleTerm<cr>", { desc = "Terminal 2" })
+      vim.keymap.set("n", "<leader>t3", "<cmd>3ToggleTerm<cr>", { desc = "Terminal 3" })
+      vim.keymap.set("n", "<leader>t4", "<cmd>4ToggleTerm<cr>", { desc = "Terminal 4" })
+
+      -- Layout options
+      vim.keymap.set("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "Float terminal" })
+      vim.keymap.set("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "Horizontal terminal" })
+      vim.keymap.set("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "Vertical terminal" })
+      vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle terminal" })
+
+      -- Terminal navigation
+      vim.keymap.set("n", "<leader>tn", "<cmd>ToggleTerm<cr>", { desc = "New/Toggle terminal" })
+      vim.keymap.set("n", "<leader>tk", function()
+        local current_term = require("toggleterm.terminal").get_focused_id()
+        if current_term then
+          vim.cmd(current_term .. "ToggleTermKill")
+        end
+      end, { desc = "Kill current terminal" })
+
+      -- Specialized terminal functions
+      local Terminal = require('toggleterm.terminal').Terminal
+
+      -- Dedicated LazyGit terminal
+      local lazygit = Terminal:new({
+        cmd = "lazygit",
+        direction = "float",
+        float_opts = { 
+          border = "double",
+          width = 0.9,
+          height = 0.9,
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+        end,
+      })
+      vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end, { desc = "LazyGit" })
+
+      -- Node REPL terminal
+      local node = Terminal:new({ 
+        cmd = "node", 
+        direction = "horizontal",
+        hidden = true 
+      })
+      vim.keymap.set("n", "<leader>tr", function() node:toggle() end, { desc = "Node REPL" })
+
+      -- Enhanced terminal navigation keymaps
+      function _G.set_terminal_keymaps()
+        local opts = {buffer = 0}
+        vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+        vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+        vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+        vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+        vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+        vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
+      end
+
+      vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
     end,
   },
   {

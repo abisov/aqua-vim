@@ -1,79 +1,107 @@
 # Terminal Usage Guide
 
-This guide covers terminal functionality in this Neovim configuration using vim-floaterm.
+This guide covers terminal functionality in this Neovim configuration using toggleterm.nvim.
 
 ## Quick Reference
 
-**Terminal Management:**
-- `<leader>ft` - Open floating terminal (center)
-- `<leader>ftr` - Open terminal on right side  
-- `<leader>tn` - Create new terminal
-- `<leader>tk` - Kill current terminal
-- `<leader>tt` - Toggle terminal
+**Tab-like Terminal Management:**
+- `<leader>t1` - Terminal 1 (tab-like access)
+- `<leader>t2` - Terminal 2 (tab-like access)
+- `<leader>t3` - Terminal 3 (tab-like access)
+- `<leader>t4` - Terminal 4 (tab-like access)
+
+**Layout Options:**
+- `<leader>tf` - Float terminal (centered overlay)
+- `<leader>th` - Horizontal terminal (bottom split)
+- `<leader>tv` - Vertical terminal (right split)
+- `<leader>tt` - Toggle current terminal
+
+**Specialized Terminals:**
+- `<leader>lg` - LazyGit (dedicated floating terminal)
+- `<leader>tr` - Node REPL (horizontal terminal)
 
 **Terminal Navigation:**
-- `<leader>t[` - Previous terminal
-- `<leader>t]` - Next terminal
-- `<C-t>` - Exit terminal mode
-- `<C-h/j/k/l>` - Navigate between windows
-
-**Visual Indicator:**
-- **󰆍 2/3** appears in statusline showing current/total terminals
+- `<C-\>` - Quick toggle terminal
+- `<Esc>` - Exit terminal mode (from terminal)
+- `<C-h/j/k/l>` - Navigate between windows (works in terminal mode)
 
 ## Terminal Types
 
-### Floating Terminal (`<leader>ft`)
-- Centered floating window
-- 70% height, 80% width
-- Auto-closes when process exits
-- Good for quick commands
+### Tab-like Terminals (`<leader>t1-4`)
+- Direct access to numbered terminals 1-4
+- Persistent across sessions
+- Each terminal maintains its own state
+- Perfect for dedicated workflows (server, tests, git, etc.)
 
-### Right-side Terminal (`<leader>ftr`)
-- Vertical split on the right
-- 30% width, full height
-- Persistent workspace terminal
+### Floating Terminal (`<leader>tf`)
+- Centered overlay window
+- 90% height and width with curved border
+- Good for quick commands and temporary tasks
+- Doesn't interfere with current layout
+
+### Horizontal Terminal (`<leader>th`)
+- Bottom split terminal
+- 15 lines height
+- Good for monitoring output while coding
+- Integrated into window layout
+
+### Vertical Terminal (`<leader>tv`)
+- Right-side split terminal
+- 30% of screen width
 - Good for long-running processes
+- Side-by-side with code
 
-### Additional Terminals (`<leader>tn`)
-- Opens as right-side vertical split (same as `<leader>ftr`)
-- 30% width, full height
-- Numbered automatically (floaterm1, floaterm2, etc.)
+### Specialized Terminals
+- **LazyGit** (`<leader>lg`): Dedicated git interface in floating window
+- **Node REPL** (`<leader>tr`): JavaScript/Node.js interactive shell
 
 ## Navigation & Mode Switching
 
 ### Exiting Terminal Mode
-When in terminal mode (cursor in terminal), you need to exit to use leader shortcuts:
-1. Press `<C-t>` to exit terminal mode
-2. Now you can use leader shortcuts like `<leader>tn`, `<leader>t[`, etc.
-3. To return to terminal: navigate to terminal window and press `i` or `a`
+When in terminal mode (cursor in terminal):
+1. Press `<Esc>` to exit terminal mode (improved from old `<C-t>`)
+2. Now you can use leader shortcuts like `<leader>t1`, `<leader>t2`, etc.
+3. To return to terminal: navigate to terminal window and it auto-enters insert mode
 
 ### Window Navigation
 - `<C-h>` - Move to left window
 - `<C-j>` - Move to bottom window  
 - `<C-k>` - Move to top window
 - `<C-l>` - Move to right window
+- `<C-w>` - Window command prefix (from terminal mode)
 
-These work from both terminal and normal mode.
+These work from both terminal and normal mode seamlessly.
+
+### Quick Terminal Access
+- `<C-\>` - Global terminal toggle (works from any mode)
+- Terminals persist when hidden and restore previous state
 
 ## Terminal Management
 
-### Creating Terminals
+### Creating/Accessing Terminals
 ```
-<leader>ft   # Quick floating terminal
-<leader>ftr  # Right-side terminal
-<leader>tn   # New right-side terminal
+<leader>t1   # Access Terminal 1 (creates if doesn't exist)
+<leader>t2   # Access Terminal 2 (creates if doesn't exist)
+<leader>t3   # Access Terminal 3 (creates if doesn't exist)
+<leader>t4   # Access Terminal 4 (creates if doesn't exist)
+
+<leader>tf   # Floating terminal
+<leader>th   # Horizontal terminal
+<leader>tv   # Vertical terminal
+<leader>tn   # New/Toggle terminal
 ```
 
-### Switching Between Terminals
+### Specialized Terminals
 ```
-<leader>t[   # Previous terminal (works in normal and terminal mode)
-<leader>t]   # Next terminal (works in normal and terminal mode)
+<leader>lg   # LazyGit terminal (floating)
+<leader>tr   # Node REPL terminal
+```
+
+### Terminal Control
+```
 <leader>tt   # Toggle current terminal visibility
-```
-
-### Closing Terminals
-```
 <leader>tk   # Kill current terminal
+<C-\>        # Quick toggle (global shortcut)
 exit         # Type in terminal to close normally
 ```
 
@@ -92,25 +120,28 @@ The indicator:
 
 ## Workflow Examples
 
-### Basic Development Workflow
+### Tab-like Development Workflow
 1. Open your code files
-2. Press `<leader>ftr` to open terminal on right
-3. Run development server: `npm run dev`
-4. Use `<C-h>` to switch back to code
-5. Use `<C-l>` to check terminal output
+2. Press `<leader>t1` for Terminal 1 - development server
+3. Run: `npm run dev`
+4. Press `<leader>t2` for Terminal 2 - testing
+5. Run: `npm test --watch`
+6. Press `<leader>t3` for Terminal 3 - git operations
+7. Use `<leader>lg` for visual git management
+8. Switch instantly: `<leader>t1`, `<leader>t2`, `<leader>t3`
 
-### Multiple Terminal Workflow
-1. Create first terminal: `<leader>ftr`
-2. Start server: `npm run dev`
-3. Create second terminal: `<leader>tn` 
-4. Run tests: `npm test`
-5. Switch between them: `<leader>t[` and `<leader>t]`
-6. Monitor with statusline: **󰆍 1/2** → **󰆍 2/2**
+### Specialized Terminal Workflow
+1. Code in main window
+2. `<leader>lg` - Quick git status/commits with LazyGit
+3. `<leader>tr` - Test JavaScript snippets in Node REPL
+4. `<leader>t1` - Keep development server running
+5. `<leader>tf` - Quick floating terminal for one-off commands
 
-### Quick Commands Workflow
-1. Press `<leader>ft` for floating terminal
-2. Run quick command: `git status`
-3. Terminal auto-closes or press `<C-t>` then `<leader>tt`
+### Layout-based Workflow
+1. `<leader>tv` - Vertical terminal for monitoring logs
+2. `<leader>th` - Horizontal terminal for quick commands
+3. `<leader>tf` - Floating terminal for git operations
+4. Each layout serves different purposes
 
 ## Auto Directory Change
 
@@ -122,6 +153,7 @@ The configuration automatically changes the working directory to match the curre
 ## Key Differences from Other Mappings
 
 **Terminal mappings** use lowercase `t`:
+- `<leader>t1-4` - Direct terminal access (tab-like)
 - `<leader>t*` - Terminal operations (e.g., `<leader>tn`, `<leader>tk`)
 
 **Test mappings** use uppercase `T`:
@@ -129,36 +161,44 @@ The configuration automatically changes the working directory to match the curre
 
 **Navigation mappings** use different prefixes:
 - `<leader>w*` - Window/split operations (e.g., `<leader>wv`, `<leader>wh`)
-- `<leader>T*` - Tab operations (e.g., `<leader>Tn`, `<leader>Tc`)
 
-This prevents conflicts between terminal, test, and navigation functionality.
+**Specialized terminals** use descriptive keys:
+- `<leader>lg` - LazyGit (git operations)
+- `<leader>tr` - REPL (interactive shells)
+
+This prevents conflicts and provides intuitive access patterns.
 
 ## Tips & Tricks
 
-### Persistent Terminals
+### Tab-like Terminal Management
+- `<leader>t1-4` provides instant access to specific terminals
+- Each terminal maintains its own working directory and history
+- Perfect for dedicated workflows (server, tests, git, monitoring)
+
+### Persistent Sessions
 - Terminals remain open even when hidden
-- Use `<leader>tt` to toggle visibility without losing session
-- Perfect for long-running processes like servers
+- Use `<leader>tt` or `<C-\>` to toggle visibility without losing session
+- Perfect for long-running processes like development servers
 
-### Terminal Switching Shortcuts
-- `<leader>t[` and `<leader>t]` work from both normal and terminal mode
-- No need to exit terminal mode first for navigation
-- Quick switching without losing context
+### Enhanced Navigation
+- `<Esc>` exits terminal mode (more intuitive than old `<C-t>`)
+- Window navigation (`<C-h/j/k/l>`) works seamlessly from terminal mode
+- Auto-insert mode when entering terminals
 
-### Statusline Monitoring
-- Always know how many terminals you have open
-- See which terminal is currently active
-- Helps prevent terminal proliferation
+### Specialized Workflows
+- LazyGit (`<leader>lg`) provides visual git interface
+- Node REPL (`<leader>tr`) for quick JavaScript testing
+- Different layouts for different use cases
 
 ## Troubleshooting
 
 ### Can't Use Leader Shortcuts in Terminal
 **Problem**: Leader shortcuts don't work when cursor is in terminal
-**Solution**: Press `<C-t>` to exit terminal mode first
+**Solution**: Press `<Esc>` to exit terminal mode first (improved from old `<C-t>`)
 
 ### Lost Track of Terminals
 **Problem**: Don't know which terminals are open
-**Solution**: Check statusline indicator **󰆍 2/3** or use `<leader>t[/]` to cycle
+**Solution**: Use `<leader>t1-4` to check specific terminals, or `<C-\>` to toggle current
 
 ### Terminal Directory Wrong
 **Problem**: Terminal opens in wrong directory
@@ -168,5 +208,13 @@ This prevents conflicts between terminal, test, and navigation functionality.
 **Problem**: Terminal stays open after process exits
 **Solution**: 
 - Type `exit` in terminal
-- Or use `<leader>tk` to force kill
-- Floating terminals auto-close on success
+- Or use `<leader>tk` to force kill current terminal
+- Terminals persist by design for better workflow
+
+### LazyGit Not Working
+**Problem**: `<leader>lg` doesn't open LazyGit
+**Solution**: Ensure `lazygit` is installed: `brew install lazygit` (macOS) or equivalent
+
+### Node REPL Issues
+**Problem**: `<leader>tr` doesn't work
+**Solution**: Ensure Node.js is installed and `node` command is available in PATH
