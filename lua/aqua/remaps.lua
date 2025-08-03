@@ -72,8 +72,7 @@ vim.keymap.set("n", '<leader>"l', "<cmd>lua require('neotest').run.run_last()<CR
 vim.keymap.set("n", '<leader>"s', "<cmd>lua require('neotest').summary.toggle()<CR>", { desc = "Toggle Test Summary" })
 
 -- Debug Tests
-vim.keymap.set("n", "<leader>dt", "<cmd>DapContinue<CR>", { desc = "Start Debugging" })
-vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "Start Debugging" })
+vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "Debug Continue" })
 vim.keymap.set("n", "<leader>dso", "<cmd>DapStepOver<CR>", { desc = "Step Over" })
 vim.keymap.set("n", "<leader>dsi", "<cmd>DapStepInto<CR>", { desc = "Step Into" })
 vim.keymap.set("n", "<leader>dsu", "<cmd>DapStepOut<CR>", { desc = "Step Out" })

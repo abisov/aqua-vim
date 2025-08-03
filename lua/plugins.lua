@@ -2,7 +2,7 @@ return {
   {
     'MeanderingProgrammer/render-markdown.nvim',
     event = "VeryLazy",
-    ft = { "markdown", "codecompanion" },
+    ft = { "markdown" },
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' },
     config = function()
       local render_markdown = require('render-markdown')
@@ -253,6 +253,12 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
+    keys = {
+      { "<leader>nm", "<cmd>Noice last<cr>", desc = "Show last message" },
+      { "<leader>nh", "<cmd>Noice history<cr>", desc = "Show message history" },
+      { "<leader>nt", "<cmd>Noice telescope<cr>", desc = "Browse messages with Telescope" },
+      { "<leader>nd", "<cmd>Noice dismiss<cr>", desc = "Dismiss all messages" },
+    },
   },
   {
     "mfussenegger/nvim-lint",
@@ -318,7 +324,7 @@ return {
         },
       })
 
-      vim.keymap.set({ "n", "v" }, "<leader>l", function()
+      vim.keymap.set({ "n", "v" }, "<leader>lf", function()
         conform.format({
           lsp_fallback = true,
           async = false,
@@ -363,7 +369,7 @@ return {
       { "S",     mode = { "n" },           function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
       { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
       { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+      { "<c-f>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     },
   },
   {
@@ -428,6 +434,7 @@ return {
           "markdown",
           "java",
           "astro",
+          "swift",
         },
         sync_install = false,
         highlight = { enable = true },
@@ -435,10 +442,10 @@ return {
         incremental_selection = {
           enable = true,
           keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = "<C-CR>",
-            node_decremental = "<bs>",
+            init_selection = "gs",
+            node_incremental = "gs",
+            scope_incremental = "gS",
+            node_decremental = "gl",
           },
         },
         textobjects = {
@@ -737,9 +744,17 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 500
+    end,
     config = function()
       local wk = require("which-key")
-      wk.setup({})
+      wk.setup({
+        triggers = {
+          { "<auto>", mode = "nxso" },
+        },
+      })
       
       -- Register group descriptions using new spec format
       wk.add({
@@ -757,6 +772,10 @@ return {
         { "<leader>R", group = "Refactor" },
         { "<leader>n", group = "Noice/Notes" },
         { "<leader>e", group = "Explore (Yazi)" },
+        { "<leader>h", group = "Harpoon" },
+        { "<leader>l", group = "Linting/LazyGit" },
+        { "<leader>o", group = "OpenCode" },
+        { "<leader>q", group = "Trouble/Quickfix" },
       })
     end,
   },
@@ -848,19 +867,6 @@ return {
       })
     end,
   },
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.o.timeout = true
-      vim.o.timeoutlen = 500
-    end,
-    opts = {
-      triggers = {
-        { "<auto>", mode = "nxso" },
-      },
-    },
-  },
   { "nvim-telescope/telescope-live-grep-args.nvim", event = "VeryLazy" },
   {
     "aaronhallaert/advanced-git-search.nvim",
@@ -870,42 +876,6 @@ return {
       "tpope/vim-fugitive",
       "tpope/vim-rhubarb",
     },
-  },
-  {
-    "olimorris/codecompanion.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "ravitemer/mcphub.nvim"
-    },
-    config = function()
-      require("codecompanion").setup({
-        adapters = {
-          ollama = function()
-            return require("codecompanion.adapters").extend("ollama", {
-              schema = { model = { default = "qwen3" } },
-            })
-          end,
-        },
-        strategies = {
-          chat = { adapter = "ollama" },
-          inline = { adapter = "ollama" },
-        },
-        extensions = {
-          mcphub = {
-            callback = "mcphub.extensions.codecompanion",
-            opts = {
-              make_vars = true,
-              make_slash_commands = true,
-              show_result_in_chat = true
-            }
-          }
-        }
-      })
-
-      vim.keymap.set({ "n", "v" }, "<leader>co", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-      vim.keymap.set({ "n", "v" }, "<leader>ct", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
-      vim.keymap.set({ "v" }, "<leader>ca", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
-    end,
   },
   {
     "kdheepak/lazygit.nvim",
@@ -1073,5 +1043,76 @@ return {
               disabled_ft = {} -- List of filetypes to disable the plugin
           })
       end
-  }
+  },
+  {
+    "folke/trouble.nvim",
+    event = "VeryLazy",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("trouble").setup({
+        warn_no_results = false,
+        open_no_results = true,
+      })
+
+      -- Trouble keymaps using <leader>q prefix to avoid conflict with <leader>x
+      vim.keymap.set("n", "<leader>qq", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Toggle Trouble" })
+      vim.keymap.set("n", "<leader>qw", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics" })
+      vim.keymap.set("n", "<leader>qd", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Workspace Diagnostics" })
+      vim.keymap.set("n", "<leader>ql", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List" })
+      vim.keymap.set("n", "<leader>qf", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List" })
+      vim.keymap.set("n", "<leader>qr", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", { desc = "LSP References" })
+      
+      -- Copy diagnostic message
+      vim.keymap.set("n", "<leader>qy", function()
+        local trouble = require("trouble")
+        if trouble.is_open() then
+          local item = trouble.get_cursor_item()
+          if item and item.message then
+            vim.fn.setreg("+", item.message)
+            vim.notify("Copied: " .. item.message)
+          end
+        end
+      end, { desc = "Copy diagnostic message" })
+      
+      -- Navigation
+      vim.keymap.set("n", "]q", function()
+        if require("trouble").is_open() then
+          require("trouble").next({ skip_groups = true, jump = true })
+        else
+          local ok, err = pcall(vim.cmd.cnext)
+          if not ok then
+            vim.notify(err, vim.log.levels.ERROR)
+          end
+        end
+      end, { desc = "Next trouble/quickfix item" })
+      
+      vim.keymap.set("n", "[q", function()
+        if require("trouble").is_open() then
+          require("trouble").prev({ skip_groups = true, jump = true })
+        else
+          local ok, err = pcall(vim.cmd.cprev)
+          if not ok then
+            vim.notify(err, vim.log.levels.ERROR)
+          end
+        end
+      end, { desc = "Previous trouble/quickfix item" })
+    end,
+  },
+  {
+    "NickvanDyke/opencode.nvim",
+    event = "VeryLazy",
+    dependencies = { "folke/snacks.nvim" },
+    opts = {},
+    keys = {
+      { "<leader>ot", function() require("opencode").toggle() end, desc = "Toggle embedded opencode" },
+      { "<leader>oa", function() require("opencode").ask() end, desc = "Ask opencode", mode = "n" },
+      { "<leader>oa", function() require("opencode").ask("@selection: ") end, desc = "Ask opencode about selection", mode = "v" },
+      { "<leader>op", function() require("opencode").select_prompt() end, desc = "Select prompt", mode = { "n", "v" } },
+      { "<leader>on", function() require("opencode").command("session_new") end, desc = "New session" },
+      { "<leader>oy", function() require("opencode").command("messages_copy") end, desc = "Copy last message" },
+      { "<S-C-u>", function() require("opencode").command("messages_half_page_up") end, desc = "Scroll messages up" },
+      { "<S-C-d>", function() require("opencode").command("messages_half_page_down") end, desc = "Scroll messages down" },
+    },
+  },
+
 }

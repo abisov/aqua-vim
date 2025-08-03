@@ -33,6 +33,9 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 vim.opt.conceallevel = 2
 
+-- Make yank/copy operations go to system clipboard
+vim.opt.clipboard = "unnamedplus"
+
 vim.opt.termguicolors = true
 
 vim.opt.autoread = true
