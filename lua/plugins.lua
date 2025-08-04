@@ -838,21 +838,7 @@ return {
       -- Specialized terminal functions
       local Terminal = require('toggleterm.terminal').Terminal
 
-      -- Dedicated LazyGit terminal
-      local lazygit = Terminal:new({
-        cmd = "lazygit",
-        direction = "float",
-        float_opts = { 
-          border = "double",
-          width = 0.9,
-          height = 0.9,
-        },
-        on_open = function(term)
-          vim.cmd("startinsert!")
-          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
-        end,
-      })
-      vim.keymap.set("n", "<leader>lg", function() lazygit:toggle() end, { desc = "LazyGit" })
+
 
       -- Node REPL terminal
       local node = Terminal:new({ 
