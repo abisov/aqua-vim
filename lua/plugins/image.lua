@@ -8,6 +8,16 @@ return {
   },
   {
     "3rd/image.nvim",
+    enabled = function()
+      -- Only enable if not in tmux or if tmux has allow-passthrough
+      if not os.getenv("TMUX") then
+        return true
+      end
+      local handle = io.popen("tmux show-options -g allow-passthrough 2>/dev/null")
+      local result = handle:read("*a")
+      handle:close()
+      return result:match("allow%-passthrough%s+on")
+    end,
     event = "VeryLazy",
     config = function()
       require("image").setup({
