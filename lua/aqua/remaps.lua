@@ -111,6 +111,20 @@ vim.keymap.set("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noi
 -- Open Zoxide telescope extension
 vim.keymap.set("n", "<leader>Z", "<cmd>Zi<CR>", { desc = "Open Zoxide" })
 
+-- Toggle minimap/scrollbar
+vim.keymap.set("n", "<leader>mm", function()
+  local scrollbar = require('scrollbar')
+  if vim.g.scrollbar_enabled ~= false then
+    vim.g.scrollbar_enabled = false
+    scrollbar.clear()
+    vim.notify("Scrollbar disabled")
+  else
+    vim.g.scrollbar_enabled = true
+    scrollbar.render()
+    vim.notify("Scrollbar enabled")
+  end
+end, { desc = "Toggle Minimap" })
+
 -- Resize with arrows
 vim.keymap.set("n", "<C-S-Down>", ":resize +2<CR>", { desc = "Resize Horizontal Split Down" })
 vim.keymap.set("n", "<C-S-Up>", ":resize -2<CR>", { desc = "Resize Horizontal Split Up" })
