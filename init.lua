@@ -26,11 +26,81 @@ require('aqua.options')
 
 -- Auto-detect system theme and set appropriate colorscheme
 local function set_theme_based_on_system()
-  local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
-  local result = handle:read("*a")
-  handle:close()
+  local is_dark = true -- Default to dark theme
+  local is_light = false -- Track if explicitly set to light
   
-  if result:match("Dark") then
+  -- Detect OS and use appropriate method
+  local uname = vim.loop.os_uname()
+  if uname.sysname == "Darwin" then
+    -- macOS
+    local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
+    local result = handle:read("*a")
+    handle:close()
+    if result:match("Dark") then
+      is_dark = true
+    elseif result and result:len() > 0 then
+      -- If we get a result but it's not "Dark", it's likely light mode
+      is_light = true
+      is_dark = false
+    end
+  else
+    -- Linux - try multiple methods
+    -- Method 1: Check GNOME color scheme preference (most reliable)
+    local handle = io.popen("gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null")
+    if handle then
+      local result = handle:read("*a")
+      handle:close()
+      if result and result:match("prefer%-dark") then
+        is_dark = true
+      elseif result and result:match("prefer%-light") then
+        is_light = true
+        is_dark = false
+      end
+    end
+    
+    -- Method 1b: Check GNOME/GTK theme as fallback
+    if not is_light then
+      local handle2 = io.popen("gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null")
+      if handle2 then
+        local result2 = handle2:read("*a")
+        handle2:close()
+        if result2 and (result2:lower():match("dark") or result2:lower():match("adwaita%-dark")) then
+          is_dark = true
+        elseif result2 and result2:lower():match("light") then
+          is_light = true
+          is_dark = false
+        end
+      end
+    end
+    
+    -- Method 2: Check KDE theme if GNOME method didn't work
+    if not is_light then
+      local handle3 = io.popen("kreadconfig5 --group General --key ColorScheme 2>/dev/null")
+      if handle3 then
+        local result3 = handle3:read("*a")
+        handle3:close()
+        if result3 and result3:lower():match("dark") then
+          is_dark = true
+        elseif result3 and result3:lower():match("light") then
+          is_light = true
+          is_dark = false
+        end
+      end
+    end
+    
+    -- Method 3: Check environment variables
+    if not is_light then
+      local theme_env = os.getenv("GTK_THEME") or ""
+      if theme_env:lower():match("dark") then
+        is_dark = true
+      elseif theme_env:lower():match("light") then
+        is_light = true
+        is_dark = false
+      end
+    end
+  end
+  
+  if is_dark then
     vim.o.background = "dark"
     vim.cmd("colorscheme gruvbox")
   else
