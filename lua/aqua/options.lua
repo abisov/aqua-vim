@@ -24,6 +24,9 @@ vim.opt.undofile = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
+-- Use terminal colors for better theme matching
+-- Set to false to use terminal's 16-color palette
+-- Set to true for 24-bit colors (if terminal supports it)
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 20
@@ -35,8 +38,6 @@ vim.opt.conceallevel = 2
 
 -- Make yank/copy operations go to system clipboard
 vim.opt.clipboard = "unnamedplus"
-
-vim.opt.termguicolors = true
 
 vim.opt.autoread = true
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {

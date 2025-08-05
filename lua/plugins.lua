@@ -502,9 +502,12 @@ return {
     "folke/tokyonight.nvim",
     opts = {
       transparent = true,
+      terminal_colors = true,
       styles = {
         sidebars = "transparent",
         floats = "transparent",
+        comments = { italic = true },
+        keywords = { italic = true },
       },
     },
   },
@@ -656,7 +659,7 @@ return {
     config = function()
       require("lualine").setup({
         options = {
-          theme = "tokyonight",
+          theme = "gruvbox",
         },
         sections = {
           lualine_a = { "mode" },

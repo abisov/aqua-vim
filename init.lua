@@ -23,7 +23,26 @@ require("lazy").setup("plugins", {
 require('aqua.globals')
 require('aqua.remaps')
 require('aqua.options')
-vim.cmd("colorscheme tokyonight")
+
+-- Auto-detect system theme and set appropriate colorscheme
+local function set_theme_based_on_system()
+  local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
+  local result = handle:read("*a")
+  handle:close()
+  
+  if result:match("Dark") then
+    vim.o.background = "dark"
+    vim.cmd("colorscheme gruvbox")
+  else
+    vim.o.background = "light"
+    vim.cmd("colorscheme gruvbox")
+  end
+end
+
+-- Set initial theme
+set_theme_based_on_system()
+
+-- Custom highlight overrides for better terminal integration
 vim.cmd('hi IlluminatedWordText guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordRead guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordWrite guibg=none gui=underline')
@@ -80,3 +99,22 @@ vim.api.nvim_create_user_command('ShowLeaderMaps', function()
     print("  " .. map.key .. " -> " .. map.desc)
   end
 end, { desc = "Show all leader key mappings" })
+
+-- Toggle between terminal colors and true colors
+vim.api.nvim_create_user_command('ToggleTerminalColors', function()
+  if vim.opt.termguicolors:get() then
+    vim.opt.termguicolors = false
+    print("Switched to terminal colors (16-color palette)")
+  else
+    vim.opt.termguicolors = true
+    print("Switched to true colors (24-bit)")
+  end
+  -- Refresh colorscheme
+  set_theme_based_on_system()
+end, { desc = "Toggle between terminal colors and true colors" })
+
+-- Command to manually refresh theme based on system
+vim.api.nvim_create_user_command('RefreshTheme', function()
+  set_theme_based_on_system()
+  print("Theme refreshed based on system appearance")
+end, { desc = "Refresh theme based on system appearance" })
