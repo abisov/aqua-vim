@@ -137,16 +137,15 @@ vim.keymap.set("n", "<leader>wh", "<cmd>split<CR>", { desc = "Split Horizontally
 vim.keymap.set("n", "<leader>wt", "<cmd>tab split<CR>", { desc = "Send Buffer to New Tab" })
 vim.keymap.set("n", "<leader>wT", "<C-w>T", { desc = "Move Split to New Tab" })
 
--- Tab management (using different prefix to avoid all conflicts)
-vim.keymap.set("n", "<leader>Tn", "<cmd>tabnew<CR>", { desc = "New Tab" })
-vim.keymap.set("n", "<leader>Tc", "<cmd>tabclose<CR>", { desc = "Close Tab" })
-vim.keymap.set("n", "<leader>To", "<cmd>tabonly<CR>", { desc = "Close Other Tabs" })
-vim.keymap.set("n", "gt", "<cmd>tabnext<CR>", { desc = "Next Tab" })
-vim.keymap.set("n", "gT", "<cmd>tabprev<CR>", { desc = "Previous Tab" })
+-- Buffer navigation (for lualine tabline)
+vim.keymap.set("n", "<leader>bn", "<cmd>bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", "<leader>bp", "<cmd>bprev<CR>", { desc = "Previous Buffer" })
+vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete Buffer" })
+vim.keymap.set("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<CR>", { desc = "Close Other Buffers" })
 
--- Move tabs  
-vim.keymap.set("n", "<leader>Tm", "<cmd>tabmove<CR>", { desc = "Move Tab to End" })
-vim.keymap.set("n", "<leader>TM", "<cmd>tabmove 0<CR>", { desc = "Move Tab to Beginning" })
+-- Quick buffer switching (replaces gt/gT)
+vim.keymap.set("n", "gb", "<cmd>bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", "gB", "<cmd>bprev<CR>", { desc = "Previous Buffer" })
 
 
 -- Visual --
