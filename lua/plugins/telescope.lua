@@ -5,6 +5,7 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-file-browser.nvim",
+    "ThePrimeagen/harpoon",
   },
   config = function()
     local builtin = require("telescope.builtin")
@@ -30,6 +31,7 @@ return {
     vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Search Git Commits" })
     vim.keymap.set("n", "<leader>gb", builtin.git_bcommits, { desc = "Search Git Commits for Buffer" })
     vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find Keymaps" })
+    vim.keymap.set("n", "<leader>fh", "<cmd>Telescope harpoon marks<CR>", { desc = "Find Harpoon Marks" })
     vim.keymap.set("n", "<leader>fe", function()
       require("telescope").extensions.file_browser.file_browser()
     end, { desc = "File Browser" })
@@ -92,9 +94,14 @@ return {
             ["<CR>"] = select_one_or_multi,
             ["<C-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
             ["<C-S-d>"] = actions.delete_buffer,
-				    ["<C-s>"] = actions.cycle_previewers_next,
-				    ["<C-a>"] = actions.cycle_previewers_prev,
-          },
+            ["<C-s>"] = actions.cycle_previewers_next,
+				    ["<C-:>"] = function(prompt_bufnr)
+              local selection = require("telescope.actions.state").get_selected_entry()
+              if selection then
+                require("harpoon.mark").add_file(selection.path or selection.value)
+                print("Added to Harpoon: " .. (selection.path or selection.value))
+              end
+            end,          },
         },
       },
       pickers = {
@@ -156,6 +163,8 @@ return {
     require("telescope").load_extension("live_grep_args")
 
     require("telescope").load_extension("file_browser")
+
+    require("telescope").load_extension("harpoon")
 
     require("telescope").load_extension("noice")
   end,

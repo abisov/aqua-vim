@@ -232,6 +232,15 @@ return {
           ["q"] = "actions.close",
           ["-"] = false,
           ["<C-e>"] = "actions.parent",
+          ["<leader>a"] = function()
+            local oil = require("oil")
+            local entry = oil.get_cursor_entry()
+            if entry and entry.type == "file" then
+              local file_path = oil.get_current_dir() .. entry.name
+              require("harpoon.mark").add_file(file_path)
+              print("Added to Harpoon: " .. file_path)
+            end
+          end,
         },
       })
     end,

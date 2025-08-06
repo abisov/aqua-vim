@@ -7,6 +7,8 @@ return {
 
     vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Harpoon: Mark File" })
     vim.keymap.set("n", "<C-g>", ui.toggle_quick_menu, { desc = "Toggle Harpoon Menu" })
+    vim.keymap.set("n", "<leader>hr", mark.rm_file, { desc = "Remove current file from Harpoon" })
+    vim.keymap.set("n", "<leader>hc", mark.clear_all, { desc = "Clear all Harpoon marks" })
 
     vim.keymap.set("n", "<leader>h1", function()
       ui.nav_file(1)
