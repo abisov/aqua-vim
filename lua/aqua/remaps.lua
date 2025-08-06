@@ -143,9 +143,35 @@ vim.keymap.set("n", "<leader>bp", "<cmd>bprev<CR>", { desc = "Previous Buffer" }
 vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete Buffer" })
 vim.keymap.set("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<CR>", { desc = "Close Other Buffers" })
 
--- Quick buffer switching (replaces gt/gT)
-vim.keymap.set("n", "gb", "<cmd>bnext<CR>", { desc = "Next Buffer" })
-vim.keymap.set("n", "gB", "<cmd>bprev<CR>", { desc = "Previous Buffer" })
+-- Quick buffer switching
+-- Note: gb/gB removed to avoid conflict with built-in gb (repeat substitute)
+-- Use Cmd/Alt+numbers or leader+bn/bp instead
+
+-- Cross-platform buffer navigation by number
+-- Cmd+number on Mac, Alt+number on other platforms
+local modifier = vim.fn.has('mac') == 1 and '<D-' or '<A-'
+
+-- Function to get the nth listed buffer
+local function goto_buffer_by_index(index)
+  local buffers = vim.tbl_filter(function(buf)
+    return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted
+  end, vim.api.nvim_list_bufs())
+  
+  if buffers[index] then
+    vim.api.nvim_set_current_buf(buffers[index])
+  else
+    vim.notify("Buffer " .. index .. " doesn't exist", vim.log.levels.WARN)
+  end
+end
+
+for i = 1, 9 do
+  vim.keymap.set("n", modifier .. i .. ">", function() goto_buffer_by_index(i) end, 
+    { desc = "Buffer " .. i })
+end
+
+-- Cross-platform sequential buffer navigation
+vim.keymap.set("n", modifier .. "b>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", modifier .. "B>", "<cmd>bprev<CR>", { desc = "Previous Buffer" })
 
 
 -- Visual --

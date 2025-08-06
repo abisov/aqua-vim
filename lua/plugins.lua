@@ -705,7 +705,36 @@ return {
           lualine_z = { "location" },
         },
         tabline = {
-          lualine_a = { 'buffers' },
+          lualine_a = { 
+            {
+              'buffers',
+              show_filename_only = true,
+              show_modified_status = true,
+              mode = 0, -- Just filename, we'll add numbers with custom formatting
+              fmt = function(name, context)
+                -- Get all listed buffers in order (using more modern approach)
+                local all_bufs = vim.api.nvim_list_bufs()
+                local buffers = {}
+                for _, buf in ipairs(all_bufs) do
+                  if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+                    table.insert(buffers, buf)
+                  end
+                end
+                
+                -- Find the index of current buffer
+                local current_buf = context.bufnr
+                local index = 1
+                for i, buf in ipairs(buffers) do
+                  if buf == current_buf then
+                    index = i
+                    break
+                  end
+                end
+                
+                return index .. ': ' .. name
+              end,
+            }
+          },
           lualine_b = {},
           lualine_c = {},
           lualine_x = {},
