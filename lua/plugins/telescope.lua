@@ -4,6 +4,7 @@ return {
   branch = "master",
   dependencies = {
     "nvim-lua/plenary.nvim",
+    "nvim-telescope/telescope-file-browser.nvim",
   },
   config = function()
     local builtin = require("telescope.builtin")
@@ -28,7 +29,16 @@ return {
     vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Find Word under Cursor" })
     vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Search Git Commits" })
     vim.keymap.set("n", "<leader>gb", builtin.git_bcommits, { desc = "Search Git Commits for Buffer" })
-    vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find Keymaps" })		
+    vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find Keymaps" })
+    vim.keymap.set("n", "<leader>fe", function()
+      require("telescope").extensions.file_browser.file_browser()
+    end, { desc = "File Browser" })
+    vim.keymap.set("n", "<leader>fE", function()
+      require("telescope").extensions.file_browser.file_browser({
+        path = "%:p:h",
+        select_buffer = true,
+      })
+    end, { desc = "File Browser (current dir)" })		
     vim.keymap.set("n", "<leader>/", function()
       -- You can pass additional configuration to telescope to change theme, layout, etc.
       require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
@@ -108,6 +118,27 @@ return {
             },
           },
         },
+        file_browser = {
+          hijack_netrw = true,
+          grouped = true,
+          sorting_strategy = "ascending",
+          layout_config = {
+            prompt_position = "top",
+          },
+          mappings = {
+            ["i"] = {
+              ["<C-j>"] = actions.cycle_history_next,
+              ["<C-k>"] = actions.cycle_history_prev,
+              ["<C-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
+              ["<C-S-d>"] = actions.delete_buffer,
+              ["<C-s>"] = actions.cycle_previewers_next,
+              ["<C-a>"] = actions.cycle_previewers_prev,
+            },
+            ["n"] = {
+              ["<C-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
+            },
+          },
+        },
       },
     })
 
@@ -123,6 +154,8 @@ return {
     require("telescope").load_extension("advanced_git_search")
 
     require("telescope").load_extension("live_grep_args")
+
+    require("telescope").load_extension("file_browser")
 
     require("telescope").load_extension("noice")
   end,
