@@ -1,7 +1,14 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.opt.guicursor = ""
+-- Fat block cursor everywhere except insert mode (thin line in insert)
+vim.opt.guicursor = {
+  "n-v-c:block",           -- Normal, visual, command-line: block cursor
+  "i-ci-ve:ver25",         -- Insert, command-line insert, visual-exclude: thin vertical line
+  "r-cr:block",            -- Replace, command-line replace: block cursor
+  "o:block",               -- Operator-pending: block cursor
+  "a:blinkwait700-blinkoff400-blinkon250", -- All modes: blink settings
+}
 
 vim.opt.nu = true
 vim.opt.relativenumber = true
