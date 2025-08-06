@@ -173,6 +173,69 @@ end
 vim.keymap.set("n", modifier .. "b>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
 vim.keymap.set("n", modifier .. "B>", "<cmd>bprev<CR>", { desc = "Previous Buffer" })
 
+-- Smart buffer close with save prompt
+local function close_buffer_with_prompt()
+  if vim.bo.modified then
+    local choice = vim.fn.confirm("Save changes to " .. vim.fn.expand("%:t") .. "?", "&Yes\n&No\n&Cancel", 1)
+    if choice == 1 then -- Yes
+      vim.cmd("write")
+      vim.cmd("bdelete")
+    elseif choice == 2 then -- No
+      vim.cmd("bdelete!")
+    end
+    -- Cancel does nothing
+  else
+    vim.cmd("bdelete")
+  end
+end
+
+vim.keymap.set("n", modifier .. "x>", close_buffer_with_prompt, { desc = "Close Buffer (with save prompt)" })
+
+-- Toggle diff view for unsaved buffer changes
+local function toggle_buffer_diff()
+  local filename = vim.fn.expand("%")
+  if filename == "" then
+    vim.notify("No file to show diff for", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Check if we have a fugitive buffer open (our diff)
+  local has_fugitive = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local bufname = vim.api.nvim_buf_get_name(buf)
+    if bufname:match("fugitive://") then
+      has_fugitive = true
+      break
+    end
+  end
+  
+  if has_fugitive then
+    -- Close our fugitive diff
+    vim.cmd("diffoff!")
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local bufname = vim.api.nvim_buf_get_name(buf)
+      if bufname:match("fugitive://") then
+        vim.api.nvim_win_close(win, false)
+      end
+    end
+  else
+    -- Check if current buffer has unsaved changes
+    if not vim.bo.modified then
+      vim.notify("No unsaved changes in current buffer", vim.log.levels.INFO)
+      return
+    end
+    
+    -- Open vertical diff split showing buffer vs HEAD
+    vim.cmd("Gvdiffsplit HEAD")
+  end
+end
+
+vim.keymap.set("n", modifier .. "d>", toggle_buffer_diff, { desc = "Toggle Buffer Diff (Unsaved Changes)" })
+
+
+
 
 -- Visual --
 -- Stay in indent mode

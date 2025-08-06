@@ -44,6 +44,17 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 vim.opt.conceallevel = 2
 
+-- Better diff options for more precise highlighting
+vim.opt.diffopt:append({
+  "internal",        -- Use internal diff algorithm
+  "filler",          -- Show filler lines
+  "closeoff",        -- Turn off diff when only one window remains
+  "hiddenoff",       -- Turn off diff when buffer becomes hidden
+  "algorithm:patience", -- Better diff algorithm for small changes
+  "indent-heuristic", -- Better handling of indentation changes
+  "linematch:60"     -- Enable word-level diff highlighting
+})
+
 -- Make yank/copy operations go to system clipboard
 vim.opt.clipboard = "unnamedplus"
 
