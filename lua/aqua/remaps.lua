@@ -1,14 +1,14 @@
 -- Oil - Set with high priority after all plugins load
 vim.schedule(function()
   vim.keymap.set("n", "<C-e>", function()
-    print("Oil keymap triggered!")
+    -- print("Oil keymap triggered!")
     require("oil").open_float()
   end, { desc = "Open Oil file explorer", noremap = true, silent = true })
 end)
 
 -- Alternative Oil mapping for testing
 vim.keymap.set("n", "<leader>oe", function()
-  print("Alternative Oil keymap triggered!")
+  -- print("Alternative Oil keymap triggered!")
   require("oil").open_float()
 end, { desc = "Open Oil file explorer (test)" })
 
