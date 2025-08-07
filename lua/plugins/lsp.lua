@@ -55,6 +55,10 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = {
         "eslint",
+        "ts_ls",
+        "angularls",
+        "cssls",
+        "emmet_ls",
         "rust_analyzer",
         "kotlin_language_server",
         "jdtls",
@@ -124,6 +128,9 @@ return {
         expand = function(args)
           require("luasnip").lsp_expand(args.body)
         end,
+      },
+      experimental = {
+        ghost_text = true,
       },
       sources = {
         { name = "nvim_lsp" },

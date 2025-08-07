@@ -1594,13 +1594,26 @@ return {
     end,
   },
   {
+    "github/copilot.vim",
+    event = "VeryLazy",
+    config = function()
+      vim.g.copilot_no_tab_map = true
+      vim.keymap.set("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false
+      })
+      vim.keymap.set("i", "<C-H>", "<Plug>(copilot-dismiss)")
+      vim.keymap.set("i", "<C-\\>", "<Plug>(copilot-suggest)")
+    end,
+  },
+  {
     "karb94/neoscroll.nvim",
     event = "VeryLazy",
     config = function()
       require("neoscroll").setup({
         mappings = {
           "<C-u>", "<C-d>", "<C-b>", "<C-f>",
-          "<C-y>", "<C-m>", "zt", "zz", "zb"
+          "<C-y>", "zt", "zz", "zb"
         },
         hide_cursor = true,
         stop_eof = true,
