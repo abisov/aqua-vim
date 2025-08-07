@@ -1,5 +1,16 @@
--- Oil
-vim.keymap.set("n", "<C-e>", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
+-- Oil - Set with high priority after all plugins load
+vim.schedule(function()
+  vim.keymap.set("n", "<C-e>", function()
+    print("Oil keymap triggered!")
+    require("oil").open_float()
+  end, { desc = "Open Oil file explorer", noremap = true, silent = true })
+end)
+
+-- Alternative Oil mapping for testing
+vim.keymap.set("n", "<leader>oe", function()
+  print("Alternative Oil keymap triggered!")
+  require("oil").open_float()
+end, { desc = "Open Oil file explorer (test)" })
 
 -- Jump between markdown headers
 vim.keymap.set("n", "gj", [[/^##\+ .*<CR>]], { buffer = true, silent = true })
@@ -148,8 +159,8 @@ vim.keymap.set("n", "<leader>bo", "<cmd>%bdelete|edit#|bdelete#<CR>", { desc = "
 -- Use Cmd/Alt+numbers or leader+bn/bp instead
 
 -- Cross-platform buffer navigation by number
--- Cmd+number on Mac, Alt+number on other platforms
-local modifier = vim.fn.has('mac') == 1 and '<D-' or '<A-'
+-- Use Alt key for all platforms (more reliable in terminals)
+local modifier = '<A-'
 
 -- Function to get the nth listed buffer
 local function goto_buffer_by_index(index)

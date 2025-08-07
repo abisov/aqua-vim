@@ -593,7 +593,7 @@ return {
       modes = {
         char = {
           jump_labels = true,
-          multi_line = false,
+          multi_line = true,
         }
       }
     },
@@ -1209,9 +1209,10 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    keys = {
-      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
-    },
+        keys = {
+          "<C-u>", "<C-d>", "<C-b>", "<C-f>",
+          "<C-y>", "<C-m>", "zt", "zz", "zb"
+        },
     config = function()
       vim.g.lazygit_floating_window_winblend = 0
       vim.g.lazygit_floating_window_scaling_factor = 0.9
@@ -1599,7 +1600,7 @@ return {
       require("neoscroll").setup({
         mappings = {
           "<C-u>", "<C-d>", "<C-b>", "<C-f>",
-          "<C-y>", "<C-e>", "zt", "zz", "zb"
+          "<C-y>", "<C-m>", "zt", "zz", "zb"
         },
         hide_cursor = true,
         stop_eof = true,
@@ -1618,7 +1619,7 @@ return {
         ["<C-b>"] = function() neoscroll.ctrl_b({ duration = 450 }) end,
         ["<C-f>"] = function() neoscroll.ctrl_f({ duration = 450 }) end,
         ["<C-y>"] = function() neoscroll.scroll(-0.1, { move_cursor = false, duration = 100 }) end,
-        ["<C-e>"] = function() neoscroll.scroll(0.1, { move_cursor = false, duration = 100 }) end,
+        ["<C-m>"] = function() neoscroll.scroll(0.1, { move_cursor = false, duration = 100 }) end,
         ["zt"] = function() neoscroll.zt({ half_win_duration = 250 }) end,
         ["zz"] = function() neoscroll.zz({ half_win_duration = 250 }) end,
         ["zb"] = function() neoscroll.zb({ half_win_duration = 250 }) end,
