@@ -733,22 +733,6 @@ return {
   },
   { "nvim-telescope/telescope-fzf-native.nvim", event = "VeryLazy", build = "make" },
   {
-    "folke/tokyonight.nvim",
-    opts = {
-      transparent = true,
-      terminal_colors = true,
-      styles = {
-        sidebars = "transparent",
-        floats = "transparent",
-        comments = { italic = true },
-        keywords = { italic = true },
-      },
-    },
-  },
-  {
-    "catppuccin/nvim",
-  },
-  {
     "ellisonleao/gruvbox.nvim",
   },
   {
