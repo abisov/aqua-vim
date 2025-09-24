@@ -733,7 +733,53 @@ return {
   },
   { "nvim-telescope/telescope-fzf-native.nvim", event = "VeryLazy", build = "make" },
   {
-    "ellisonleao/gruvbox.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha", -- latte, frappe, macchiato, mocha
+        background = {
+          light = "latte",
+          dark = "mocha",
+        },
+        transparent_background = false,
+        show_end_of_buffer = false,
+        term_colors = true,
+        dim_inactive = {
+          enabled = false,
+          shade = "dark",
+          percentage = 0.15,
+        },
+        no_italic = false,
+        no_bold = false,
+        no_underline = false,
+        styles = {
+          comments = { "italic" },
+          conditionals = { "italic" },
+          loops = {},
+          functions = {},
+          keywords = {},
+          strings = {},
+          variables = {},
+          numbers = {},
+          booleans = {},
+          properties = {},
+          types = {},
+          operators = {},
+        },
+        color_overrides = {},
+        custom_highlights = {},
+        integrations = {
+          cmp = true,
+          gitsigns = true,
+          nvimtree = true,
+          telescope = true,
+          notify = false,
+          mini = false,
+        },
+      })
+    end,
   },
   {
     "mbbill/undotree",
@@ -877,7 +923,9 @@ return {
     config = function()
       require("lualine").setup({
         options = {
-          theme = "gruvbox",
+          theme = "catppuccin",
+          component_separators = { left = '', right = '' },
+          section_separators = { left = '', right = '' },
         },
         sections = {
           lualine_a = { "mode" },
@@ -923,14 +971,35 @@ return {
           lualine_z = { "location" },
         },
         tabline = {
-          lualine_a = { 
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { 
             {
               'buffers',
               show_filename_only = true,
               show_modified_status = true,
-              mode = 0, -- Just filename, we'll add numbers with custom formatting
+              mode = 0,
+              max_length = vim.o.columns * 0.8, -- Use most of the screen width
+              filetype_names = {
+                TelescopePrompt = 'Telescope',
+                dashboard = 'Dashboard',
+                packer = 'Packer',
+                fzf = 'FZF',
+                alpha = 'Alpha'
+              },
+              symbols = {
+                modified = ' ●',      -- Text to show when the buffer is modified
+                alternate_file = '',  -- Text to show to identify the alternate file
+                directory =  '',     -- Text to show when the buffer is a directory
+              },
+              separator = { left = '', right = '' }, -- Rounded separators like tmux
+              use_mode_colors = false, -- Use our custom highlights instead
+              buffers_color = {
+                active = 'LualineBufferCurrent',
+                inactive = 'LualineBufferInactive',
+              },
               fmt = function(name, context)
-                -- Get all listed buffers in order (using more modern approach)
+                -- Get all listed buffers in order
                 local all_bufs = vim.api.nvim_list_bufs()
                 local buffers = {}
                 for _, buf in ipairs(all_bufs) do
@@ -949,12 +1018,11 @@ return {
                   end
                 end
                 
-                return index .. ': ' .. name
+                -- Add padding and index to match tmux style
+                return "  " .. index .. ": " .. name .. "  "
               end,
             }
           },
-          lualine_b = {},
-          lualine_c = {},
           lualine_x = {},
           lualine_y = {},
           lualine_z = {},

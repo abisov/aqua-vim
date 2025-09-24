@@ -102,10 +102,10 @@ local function set_theme_based_on_system()
   
   if is_dark then
     vim.o.background = "dark"
-    vim.cmd("colorscheme gruvbox")
+    vim.cmd("colorscheme catppuccin-mocha")
   else
     vim.o.background = "light"
-    vim.cmd("colorscheme gruvbox")
+    vim.cmd("colorscheme catppuccin-latte")
   end
 end
 
@@ -116,6 +116,27 @@ set_theme_based_on_system()
 vim.cmd('hi IlluminatedWordText guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordRead guibg=none gui=underline')
 vim.cmd('hi IlluminatedWordWrite guibg=none gui=underline')
+
+-- Custom buffer tabline highlights for pill-shaped styling (Catppuccin Mocha colors)
+local function set_buffer_highlights()
+  -- More pronounced pill-shaped buffer styling
+  vim.cmd('hi LualineBufferCurrent guibg=#585b70 guifg=#ffffff gui=bold')      -- Active: gray bg, white text, bold
+  vim.cmd('hi LualineBufferInactive guibg=#313244 guifg=#9399b2 gui=none')     -- Inactive: darker gray, muted text
+  vim.cmd('hi LualineBufferVisible guibg=#45475a guifg=#bac2de gui=none')      -- Visible: medium gray
+  
+  -- Style the tabline background and make separators more prominent
+  vim.cmd('hi lualine_c_buffers_tabline guibg=#1e1e2e')
+  vim.cmd('hi TabLineFill guibg=#1e1e2e')  -- Background for empty tabline space
+end
+
+-- Set highlights after colorscheme loads
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = set_buffer_highlights,
+})
+
+-- Set initial highlights
+set_buffer_highlights()
 require('nvim-highlight-colors').setup({
   enable_named_colors = false,
 })

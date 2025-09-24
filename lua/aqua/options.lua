@@ -76,3 +76,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
 -- Enable .nvimrc for local dir configuration
 vim.opt.exrc = true
 vim.opt.secure = true
+
+-- Show tabline (buffer tabs) always and let lualine handle it
+vim.opt.showtabline = 2
+vim.opt.tabline = ""  -- Clear built-in tabline to let lualine take over
