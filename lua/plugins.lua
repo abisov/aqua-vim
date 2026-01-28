@@ -174,15 +174,6 @@ return {
   },
   { 'brenoprata10/nvim-highlight-colors' },
   { "tpope/vim-projectionist" },
-  {
-    "NeogitOrg/neogit",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",  -- required
-      "sindrets/diffview.nvim", -- optional - Diff integration
-    },
-    config = true,
-  },
   { "mfussenegger/nvim-jdtls", ft = {"kotlin", "java"} },
   {
     "keith/swift.vim",
@@ -607,26 +598,6 @@ return {
     },
   },
   {
-    "pwntester/octo.nvim",
-    cmd = "Octo",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
-      require("octo").setup({
-        enable_builtin = true,
-        use_local_fs = true,
-      })
-      vim.cmd([[hi OctoEditable guibg=none]])
-      vim.treesitter.language.register("markdown", "octo")
-    end,
-    keys = {
-      { "<leader>O",  "<cmd>Octo<cr>",         desc = "Octo" },
-      { "<leader>Op", "<cmd>Octo pr list<cr>", desc = "Octo pr list" },
-    },
-  },
-  {
     "windwp/nvim-ts-autotag",
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
@@ -810,112 +781,8 @@ return {
       require("nvim-autopairs").setup()
     end,
   },
-  {
-    "nvim-neotest/neotest",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "antoinemadec/FixCursorHold.nvim",
-      "olimorris/neotest-rspec",
-      "haydenmeade/neotest-jest",
-      "zidhuss/neotest-minitest",
-      "mfussenegger/nvim-dap",
-      "jfpedroza/neotest-elixir",
-      "weilbith/neotest-gradle",
-      "nvim-neotest/neotest-go",
-    },
-    opts = {},
-    config = function()
-      local neotest = require("neotest")
 
-      local neotest_jest = require("neotest-jest")({
-        jestCommand = "npm test --",
-      })
-      neotest_jest.filter_dir = function(name)
-        return name ~= "node_modules" and name ~= "__snapshots__"
-      end
 
-      neotest.setup({
-        adapters = {
-          require("neotest-rspec")({
-            rspec_cmd = function()
-              return vim.tbl_flatten({
-                "bundle",
-                "exec",
-                "rspec",
-              })
-            end,
-          }),
-          neotest_jest,
-          require("neotest-minitest"),
-          require("neotest-elixir"),
-          require("neotest-go"),
-        },
-        output_panel = {
-          enabled = true,
-          open = "botright split | resize 15",
-        },
-        quickfix = {
-          open = false,
-        },
-      })
-    end,
-  },
-  {
-    "mfussenegger/nvim-dap",
-    event = "VeryLazy",
-    dependencies = {
-      {
-        "rcarriga/nvim-dap-ui",
-        "nvim-neotest/nvim-nio",
-        config = function(_, opts)
-          local dap = require("dap")
-          local dapui = require("dapui")
-          dap.set_log_level('INFO')
-          dapui.setup(opts)
-          dap.listeners.after.event_initialized["dapui_config"] = function()
-            dapui.open({})
-          end
-          dap.listeners.before.event_terminated["dapui_config"] = function()
-            dapui.close({})
-          end
-          dap.listeners.before.event_exited["dapui_config"] = function()
-            dapui.close({})
-          end
-        end,
-      },
-      {
-        "suketa/nvim-dap-ruby",
-        config = function()
-          require("dap-ruby").setup()
-        end,
-      },
-      {
-        "leoluz/nvim-dap-go",
-        config = function()
-          require("dap-go").setup()
-        end,
-      },
-      {
-        "theHamsta/nvim-dap-virtual-text",
-        opts = {},
-      },
-      {
-        "jay-babu/mason-nvim-dap.nvim",
-        dependencies = "mason.nvim",
-        cmd = { "DapInstall", "DapUninstall" },
-        opts = {
-          automatic_installation = true,
-          handlers = {},
-          ensure_installed = {
-            "delve"
-          },
-        },
-      },
-      { "jbyuki/one-small-step-for-vimkind", module = "osv" },
-    },
-  },
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
@@ -1045,28 +912,6 @@ return {
     build = ":call fzf#install()",
   },
   { "nanotee/zoxide.vim", event = "VeryLazy" },
-  {
-    "mikavilpas/yazi.nvim",
-    event = "VeryLazy",
-    keys = {
-      {
-        "<leader>fy",
-        "<cmd>Yazi<cr>",
-        desc = "Open Yazi",
-      },
-      {
-        "<leader>fY",
-        "<cmd>Yazi cwd<cr>",
-        desc = "Open Yazi in working directory",
-      },
-    },
-    opts = {
-      open_for_directories = false,
-      keymaps = {
-        show_help = '<f1>',
-      },
-    },
-  },
   { "nvim-telescope/telescope-ui-select.nvim", event = "VeryLazy" },
   { "debugloop/telescope-undo.nvim", event = "VeryLazy" },
   {
@@ -1201,7 +1046,6 @@ return {
     end,
   },
   { "mg979/vim-visual-multi", event = "VeryLazy" },
-  { "tpope/vim-rails", event = "VeryLazy" },
   {
     "williamboman/mason.nvim",
     event = "VeryLazy",
@@ -1225,7 +1069,6 @@ return {
 
       mason_tool_installer.setup({
         ensure_installed = {
-          "standardrb",
           "prettier",
           "prettierd",
           "ktlint",
@@ -1239,7 +1082,6 @@ return {
           "taplo",
           "shellcheck",
           "gopls",
-          "delve",
           "astro-language-server",
         },
       })
@@ -1254,23 +1096,6 @@ return {
       "tpope/vim-fugitive",
       "tpope/vim-rhubarb",
     },
-  },
-  {
-    "kdheepak/lazygit.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    keys = {
-      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "Open LazyGit" },
-    },
-    config = function()
-      vim.g.lazygit_floating_window_winblend = 0
-      vim.g.lazygit_floating_window_scaling_factor = 0.9
-      vim.g.lazygit_floating_window_corner_chars = {'╭', '╮', '╰', '╯'}
-      vim.g.lazygit_floating_window_use_plenary = 0
-      vim.g.lazygit_use_neovim_remote = 1
-    end,
   },
   {
       "rachartier/tiny-inline-diagnostic.nvim",
